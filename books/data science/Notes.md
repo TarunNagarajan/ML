@@ -1,0 +1,1 @@
+It involves data collection, cleaning, exploration, visualization, and modeling. Key techniques include machine learning, statistical analysis, and predictive modeling. Popular tools include Python, R, and SQL, with libraries like Pandas for data manipulation, NumPy for numerical computing, Matplotlib and Seaborn for visualization, and Scikit-learn for machine learning. 
