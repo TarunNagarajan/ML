@@ -1,0 +1,88 @@
+> data(mtcars)
+> head(mtcars)
+                   mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
+
+> # a simple linear model, where mpg is reliant on wt alone. 
+> model_simple <- lm(mpg ~ wt, data = mtcars)
+> summary(model_simple)
+
+Call:
+lm(formula = mpg ~ wt, data = mtcars)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.5432 -2.3647 -0.1252  1.4096  6.8727 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  37.2851     1.8776  19.858  < 2e-16 ***
+wt           -5.3445     0.5591  -9.559 1.29e-10 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 3.046 on 30 degrees of freedom
+Multiple R-squared:  0.7528,	Adjusted R-squared:  0.7446 
+F-statistic: 91.38 on 1 and 30 DF,  p-value: 1.294e-10
+
+> # PLOT I: Simple Linear Model (mpg ~ wt)
+> plot(mtcars$wt, mtcars$mpg,
++      main = "MPG vs. Wt",
++      xlab = "Weight (1000 lbs)",
++      ylab = "Miles Per Gallon",
++      pch = 19,
++      col = "blue")
+> abline(model_simple, col = "red", lwd = 2)
+> # multiple linear regression model.
+> model_multiple <- lm(mpg ~ wt + hp, data = mtcars)
+> summary(model_multiple)
+
+Call:
+lm(formula = mpg ~ wt + hp, data = mtcars)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-3.941 -1.600 -0.182  1.050  5.854 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 37.22727    1.59879  23.285  < 2e-16 ***
+wt          -3.87783    0.63273  -6.129 1.12e-06 ***
+hp          -0.03177    0.00903  -3.519  0.00145 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 2.593 on 29 degrees of freedom
+Multiple R-squared:  0.8268,	Adjusted R-squared:  0.8148 
+F-statistic: 69.21 on 2 and 29 DF,  p-value: 9.109e-12
+
+> # using new data for a data frame, so that the model can try and make predictions. 
+> wt <- 3
+> hp <- 110
+> new_data <- data.frame(wt = 3, hp = 110)
+> predicted <- predict(model_multiple, newdata = new_data)
+> cat("Predicted MPG for wt =", wt, " and hp =", hp, "is:", predicted)
+Predicted MPG for wt = 3  and hp = 110 is: 22.09875
+> par(mfrow = c(2, 2))
+> plot(model_multiple)
+> par(mfrow = c(1, 1)) # clear the plot space
+> # prediction vs. actual -> a comparison
+> prediction <- predict(model_multiple, newdata = mtcars) # predicted mpg
+> actual <- mtcars$mpg # actual mpg
+> cat("Actual Length:", length(actual))
+Actual Length: 32
+> cat("Predicted Length: ", length(prediction))
+Predicted Length:  32
+> plot(actual, prediction,
++      main = "Predicted vs. Actual MPG",
++      xlab = "Actual MPG",
++      ylab = "Predicted MPG",
++      pch = 19,
++      col = "darkgreen")
+> abline(a = 0, b = 1, col = "red", lwd = 2)
+> dev.off()
